@@ -1,0 +1,64 @@
+FROM ubuntu:18.04
+
+
+
+WORKDIR /mnt/rosedocker
+
+
+
+RUN apt-get update && apt-get install -y git wget build-essential unzip gdb ghostscript &&\
+    useradd -ms /bin/bash ipt && cd /mnt/rosedocker/ && mkdir roseCompile && cd roseCompile/ &&\
+    wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz &&\
+    tar -xvf jdk-8u131-linux-x64.tar.gz && export JAVA_HOME=/mnt/rosedocker/roseCompile/jdk1.8.0_131 &&\
+    export  JAVA_TOOL_OPTIONS="-Xms2G -Xmx2G" &&\
+    export LD_LIBRARY_PATH=/mnt/rosedocker/roseCompile/jdk1.8.0_131/jre/lib/amd64/server &&\
+    apt-get install autoconf automake flex bison -y &&\
+    wget http://mirror.jre655.com/GNU/libtool/libtool-2.4.6.tar.gz &&\
+    tar xf libtool-2.4.6.tar.gz && cd libtool-2.4.6 &&\
+    sh configure --prefix /mnt/rosedocker/roseCompile/lib && make install && cd .. &&\
+    export PATH=/mnt/rosedocker/roseCompile/lib/bin:$PATH &&\
+    export LD_LIBRARY_PATH=/mnt/rosedocker/roseCompile/lib/lib/:$LD_LIBRARY_PATH  &&\
+
+    # Boost installation
+    wget -O boost-1.64.0.tar.bz2 http://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.bz2/download &&\
+    tar xf boost-1.64.0.tar.bz2 && cd boost_1_64_0/ &&\
+    ./bootstrap.sh --prefix=/mnt/rosedocker/roseCompile/boost_install --with-libraries=chrono,date_time,filesystem,iostreams,program_options,random,regex,serialization,signals,system,thread,wave &&\
+    ./b2 --prefix=/mnt/rosedocker/roseCompile/boost_install -sNO_BZIP2=1 runtime-link=static link=static install &&\
+    cd .. && export LD_LIBRARY_PATH=/mnt/rosedocker/roseCompile/boost_install/lib:$LD_LIBRARY_PATH &&\
+
+    # Rose installation
+    mkdir roseCompileTree && git clone https://github.com/rose-compiler/rose &&cd rose &&\
+    ./build && cd .. && cd roseCompileTree/ &&\
+    apt-get install -y gfortran &&\
+    /mnt/rosedocker/roseCompile/rose/configure --prefix=/mnt/rosedocker/roseCompile/roseCompileTree --with-boost=/mnt/rosedocker/roseCompile/boost_install --disable-shared --enable-static --with-CXX_DEBUG=no --with-C_DEBUG=no &&\
+    make core -j4 && make install-core -j4 &&\
+
+
+    # Test identity translator (it.cc)
+    mkdir /home/ipt/src && cd /home/ipt/src &&\
+    cp /mnt/rosedocker/roseCompile/roseCompileTree/include/edg/g++_HEADERS/rose_edg_required_macros_and_functions.h . &&\
+
+
+    # Remove the unnecessary packages
+    apt-get remove build-essential gfortran && apt autoremove
+
+
+#       This file has some bugs in it. To fix it:
+#          Uncomment the following line: #undef __SIZE_TYPE__ (line 32)
+#          Comment out: #define __CHAR32_TYPE__ unsigned int (line 379)
+#          Comment out: #define __PTRDIFF_TYPE__ long int (line 403)
+
+
+# Compile the identity translator
+# g++ -DNDEBUG -std=c++0x -w -v -static-libstdc++ -std=c++0x -w -o identtrans /home/ipt/src/it.cc -I/mnt/rosedocker/roseCompile/boost_install/include/ -I/mnt/rosedocker/roseCompile/roseCompileTree/include -L/mnt/rosedocker/roseCompile/roseCompileTree/lib  -I/mnt/rosedocker/roseCompile/roseCompileTree/include/rose -L/mnt/rosedocker/roseCompile/boost_install/lib /mnt/rosedocker/roseCompile/roseCompileTree/lib/librose.a /mnt/rosedocker/roseCompile/roseCompileTree/lib/libhpdf.a -L/mnt/rosedocker/roseCompile/jdk1.8.0_131/jre/lib/amd64/server -ljvm -ldl -lboost_date_time -lboost_thread -lboost_filesystem -lboost_program_options -lboost_regex -lboost_system -lboost_serialization -lboost_wave -lboost_iostreams -lpthread -lboost_chrono
+
+# Run the identity translator on a hellow worl file (returns a similar file)
+# export JAVA_HOME=/mnt/rosedocker/roseCompile/jdk1.8.0_131
+# export JAVA_TOOL_OPTIONS="-Xms2G -Xmx2G"
+# export LD_LIBRARY_PATH=/mnt/rosedocker/roseCompile/jdk1.8.0_131/jre/lib/amd64/server
+# export PATH=/mnt/rosedocker/roseCompile/lib/bin:$PATH
+# export LD_LIBRARY_PATH=/mnt/rosedocker/roseCompile/lib/lib/:$LD_LIBRARY_PATH
+# export LD_LIBRARY_PATH=/mnt/rosedocker/roseCompile/boost_install/lib:$LD_LIBRARY_PATH
+
+
+# /home/ipt/src/identtrans -c hello_world.c

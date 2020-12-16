@@ -1,0 +1,133 @@
+.navbar {
+    margin-bottom: 0;
+    background: #039;
+  }
+
+.navbar-default{
+    border-color: #039;
+    border-radius: 0px;
+    background-color: #039;
+    color: #ffffff;
+
+}
+
+.navbar-default .navbar-brand{
+    color: #ffffff;
+}
+
+.navbar-default .navbar-nav> li >a{
+  color: #ffffff;
+}
+
+.navbar-default .navbar-nav> li >a:hover{
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.navbar-default .navbar-brand :hover{
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus{
+  color: #ffffff;
+}
+
+.navbar-brand{
+  padding: 0;
+}
+
+.navbar-brand img{
+  width: 45%;
+
+}
+
+.navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand{
+  margin-left: 10px;
+}
+
+.inputfile{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label{
+  font-size: 1em;
+  font-weight: 500;
+  color: #039;
+  background-color: transparent;
+  border: 1px solid #039;
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 3px;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover{
+  /*background-color: red;*/
+  background-color: #039;
+  color: #ffffff;
+}
+
+.inputfile + label {
+  cursor: pointer; /* hand cursor */
+}
+
+.input:focus + label{
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
+.btn-default{
+  color: #039;
+  background-color: transparent;
+  border-color:#039;
+}
+
+.btn-default:hover{
+  background-color: #003399;
+  color: #ffffff;
+  border-color: #039;
+}
+
+.dropdown-toggle, .dropdown-toggle:hover{
+  color: #333;
+  border-color: #ccc;
+  background-color: transparent;
+}
+.tab-content{
+  padding-bottom: 50px;
+}
+/* Terminal Page Styling */
+.terminal{
+  margin-bottom: 50px;
+}
+
+.error{
+  color: red;
+}
+
+/*
+.errorlist{
+  color: red;
+  padding-left: 0;
+}
+
+.errorlist li{
+  color: red;
+  list-style: none;
+  padding-left: 0;
+}*/
+.success{
+  color: green;
+}
+/*
+th, td {
+  padding: 10px;
+  vertical-align: top;
+}*/

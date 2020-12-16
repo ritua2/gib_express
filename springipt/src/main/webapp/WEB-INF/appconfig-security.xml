@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+    
+	<http  auto-config="true" use-expressions="true"  authentication-manager-ref="authenticationManager">
+        <intercept-url pattern="/" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<intercept-url pattern="/" access="permitAll"/>
+        <intercept-url pattern="/welcome" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<intercept-url pattern="/welcome" access="permitAll"/>
+        <intercept-url pattern="/terminal" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<intercept-url pattern="/terminal" access="permitAll"/>
+		
+		<intercept-url pattern="/compilerun" access="permitAll"/>
+		
+		
+		<intercept-url pattern="/comments/*/reply" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<intercept-url pattern="/comments/*/reply" access="permitAll"/>
+		<intercept-url pattern="/comments/*/update" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<intercept-url pattern="/comments/*/update" access="permitAll"/>
+		<intercept-url pattern="/comments/*/delete" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<intercept-url pattern="/comments/*/delete" access="permitAll"/>
+		<intercept-url pattern="/template/addcomment" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<intercept-url pattern="/template/addcomment" access="permitAll"/>
+		<intercept-url pattern="/jobHistory" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<intercept-url pattern="/jobHistory" access="permitAll"/>
+		<intercept-url pattern="/admin" access="hasAnyRole('ROLE_ADMIN')"/>
+        
+		<form-login login-page="/login_normal" default-target-url="/welcome" authentication-failure-url="/login_normal?error" username-parameter="username" password-parameter="password"/>
+		
+		
+		
+        <csrf disabled="true"/>
+		<session-management invalid-session-url="/entry">
+			<concurrency-control expired-url="/entry" />
+		</session-management>
+		<access-denied-handler error-page="/accessDenied"/>
+    </http>
+	
+<authentication-manager id="authenticationManager">
+	
+	<ldap-authentication-provider  user-dn-pattern="<pattern>" server-ref="ldapServer">
+			
+		</ldap-authentication-provider>
+    <authentication-provider user-service-ref="loginUserDetailsServiceImpl">
+            <password-encoder ref="encoder"></password-encoder>
+        </authentication-provider>
+    </authentication-manager>
+
+	<ldap-server id="ldapServer" url="ldap://<serverip>:<server port>/<dc=octet1, dc=octet2, dc=octet3, dc=octet4"
+		manager-dn="<dn pattern>" manager-password="password"/>
+		
+	
+    <beans:bean id="loginUserDetailsServiceImpl" class="com.ipt.web.service.LoginUserDetailsServiceImpl"></beans:bean>
+
+    <beans:bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+	<beans:constructor-arg name="strength" value="11"/>
+	
+    </beans:bean>
+</beans:beans>

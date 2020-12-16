@@ -1,0 +1,68 @@
+version: '3'
+
+
+volumes:
+  greyfish:
+
+
+services:
+
+  # Manager node: User orchestration
+    manager_node:
+        build: ./manager_node
+        image: "ipt/manager_node"
+        container_name: manager_node
+        ports:
+            - "5000:5000"
+        volumes:
+          - greyfish:/greyfish
+        environment:
+            - REDIS_AUTH
+            - orchestra_key
+            - URL_BASE
+            - PROJECT
+            - gthreads
+            - MYSQL_DATABASE
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - SENDER_EMAIL
+            - SENDER_EMAIL_PASSWORD
+        command: "tail -F anything"
+
+
+    # Cloud storage
+    greyfish:
+        build: ./greyfish_storage
+        image: "ipt/greyfish"
+        container_name: greyfish
+        ports:
+          - "2000-2004:2000-2004"
+        volumes:
+          - greyfish:/greyfish
+
+        environment:
+            - greyfish_key
+            - greyfish_path
+            - greyfish_threads
+            - URL_BASE
+            - MYSQL_DATABASE
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - REDIS_AUTH
+
+        command: "tail -F anything"
+
+    # Temporary keys and instance information
+    redis:
+        image: 'redis:4-alpine'
+        container_name: redis
+        environment:
+            - REDIS_AUTH
+        command: redis-server --requirepass $REDIS_AUTH
+        ports:
+            - '6379:6379'
+
+
+volumes:
+  greyfish:
+    external: true

@@ -1,0 +1,40 @@
+version: '3'
+
+
+volumes:
+  lib:
+  spool:
+  log:
+  db:
+
+
+
+services:
+  slurm:
+    build: .
+    container_name: slurm
+    hostname: ernie
+    stdin_open: true
+    tty: true
+
+    environment:
+      - CONDUCTOR_IP
+      - CONDUCTOR_PASSWORD
+      - output_data_path
+
+    volumes:
+      - lib:/var/lib/slurmd
+      - spool:/var/spool/slurmd
+      - log:/var/log/slurm
+      - db:/var/lib/mysql
+
+
+volumes:
+  lib:
+    external: true
+  spool:
+    external: true
+  log:
+    external: true
+  db:
+    external: true

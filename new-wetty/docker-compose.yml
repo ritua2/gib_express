@@ -1,0 +1,19 @@
+version: '3'
+
+
+services:
+
+
+  easy_wetty:
+    build: .
+    image: "easy_wetty/standalone"
+    container_name: wetty
+    tty: true
+    environment:
+      - conductor
+      - orchestra_key
+      - SLURM
+
+    ports:
+      - "7005:3000"
+    command: "main_daemon"

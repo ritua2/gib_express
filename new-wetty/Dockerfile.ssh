@@ -1,0 +1,17 @@
+FROM alpine:latest
+
+
+COPY ssh_setup.sh /bin/ssh_setup
+
+
+
+RUN apk --no-cache add bash curl openrc openssh rsync && rc-update add sshd &&\
+    chmod +x /bin/ssh_setup &&\
+    # ssh is not as root
+    addgroup -S rsync_user && adduser -S rsync_user -G rsync_user -s /bin/bash &&\
+    mkdir /home/rsync_user/.ssh
+
+
+
+
+CMD ["/bin/ssh_setup"]

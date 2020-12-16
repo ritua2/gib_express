@@ -1,0 +1,26 @@
+version: '2'
+
+
+volumes:
+  listener:
+
+
+services:
+
+
+  listener:
+    build: .
+    image: "ipt/listener"
+
+    ports:
+      - "5000:5000"
+    volumes:
+      - "/host/directory:/output-data"
+
+    environment:
+      - greyfish_url=0.0.0.0
+      - greyfish_key=greyfish
+      - output_data_path=/output-data
+      - listener_password=p123
+
+    command: "tail -F anything"

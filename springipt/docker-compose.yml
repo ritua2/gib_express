@@ -1,0 +1,50 @@
+version: "2"
+services:
+  web:
+    build:
+      context: ./src
+    container_name: tomcat_springipt
+    volumes:
+      - term:/home/term
+    links:
+      - mysql_springipt:mysql_springipt
+    ports: 
+      - "9090:8080"
+      - "443:8443"
+      - "8443:8443"
+    volumes:
+      # Names within curly brackets '{}' are path variables and should be substituted by those that the user assigns
+      - ./target/springipt-0.0.1.war:/usr/local/tomcat/webapps/ROOT.war
+      - {LOCAL_ENVAR}:/usr/local/tomcat/webapps/envar.txt
+      - myvol:/home/term
+      - {LOCAL_RSA}:/usr/local/tomcat/.ssh/PrivateKey.ppk
+      - greyfish:/home/greyfish/users
+      - {LOCAL_KEYSTORE}:/usr/local/tomcat/keystore
+      - {LOCAL_SERVER.xml}:/usr/local/tomcat/conf/server.xml
+
+
+
+  mysql_springipt:
+    image: mysql
+    container_name: mysql_springipt
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_SERVER
+    ports:
+      - "6603:3306"
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+      - data:/var/lib/mysql
+
+
+volumes:
+  data:
+    driver: local
+  myvol:
+    external: true
+  greyfish:
+    external: true
+
