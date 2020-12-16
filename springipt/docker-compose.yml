@@ -12,15 +12,21 @@ services:
       - "9090:8080"
       - "443:8443"
       - "8443:8443"
+    environment:
+      - MYSQL_CONN_URL
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - URL_BASE
     volumes:
       # Names within curly brackets '{}' are path variables and should be substituted by those that the user assigns
       - ./target/springipt-0.0.1.war:/usr/local/tomcat/webapps/ROOT.war
-      - {LOCAL_ENVAR}:/usr/local/tomcat/webapps/envar.txt
+      - ./envar.txt:/usr/local/tomcat/webapps/envar.txt
       - myvol:/home/term
-      - {LOCAL_RSA}:/usr/local/tomcat/.ssh/PrivateKey.ppk
+      - ./ssh/id_rsa:/usr/local/tomcat/.ssh/PrivateKey.ppk
       - greyfish:/home/greyfish/users
-      - {LOCAL_KEYSTORE}:/usr/local/tomcat/keystore
-      - {LOCAL_SERVER.xml}:/usr/local/tomcat/conf/server.xml
+      #- ./keystore:/usr/local/tomcat/keystore
+      - ./server.xml:/usr/local/tomcat/conf/server.xml
 
 
 

@@ -44,16 +44,16 @@
 	
 <authentication-manager id="authenticationManager">
 	
-	<ldap-authentication-provider  user-dn-pattern="<pattern>" server-ref="ldapServer">
+	<!--<ldap-authentication-provider  user-dn-pattern="<pattern>" server-ref="ldapServer">
 			
-		</ldap-authentication-provider>
+		</ldap-authentication-provider>-->
     <authentication-provider user-service-ref="loginUserDetailsServiceImpl">
             <password-encoder ref="encoder"></password-encoder>
         </authentication-provider>
     </authentication-manager>
 
-	<ldap-server id="ldapServer" url="ldap://<serverip>:<server port>/<dc=octet1, dc=octet2, dc=octet3, dc=octet4"
-		manager-dn="<dn pattern>" manager-password="password"/>
+	<!--<ldap-server id="ldapServer" url="ldap://<serverip>:<server port>/<dc=octet1, dc=octet2, dc=octet3, dc=octet4"
+		manager-dn="<dn pattern>" manager-password="password"/>-->
 		
 	
     <beans:bean id="loginUserDetailsServiceImpl" class="com.ipt.web.service.LoginUserDetailsServiceImpl"></beans:bean>

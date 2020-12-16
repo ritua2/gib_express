@@ -1,8 +1,8 @@
-CREATE USER IF NOT EXISTS '<db_user>'@'localhost';
-ALTER USER '<db_user>'@'localhost' IDENTIFIED WITH mysql_native_password BY '<DB user\'s Password>';
+CREATE USER IF NOT EXISTS 'iptuser'@'localhost';
+ALTER USER 'iptuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 
 CREATE DATABASE  IF NOT EXISTS iptweb;
-GRANT ALL PRIVILEGES ON iptweb.* to '<db_user>'@'localhost';
+GRANT ALL PRIVILEGES ON iptweb.* to 'iptuser'@'localhost';
 
 use iptweb;
 

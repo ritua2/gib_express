@@ -90,8 +90,8 @@
 	<Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS" 
-	       keystoreFile="/usr/local/tomcat/<path and name of keystore file>"
-	       keystorePass="<password>" />
+	       keystoreFile="/usr/local/tomcat/keystore"
+	       keystorePass="password" />
      <!--   <SSLHostConfig>
             <Certificate certificateKeystoreFile="../keystore" certificateKeystorePass="Dr3C@rl05Kr1$"
                          type="RSA" />
