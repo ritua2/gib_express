@@ -100,7 +100,7 @@ chmod +x wetty_setup.sh
 ./wetty_setup.sh
 
 # Provide URL_BASE and orchestra key from .env file when promptes. Also provide number of terminals to be run ranging from 1 to 6
-'''
+```
 
 * **Receiving Jobs**
 
