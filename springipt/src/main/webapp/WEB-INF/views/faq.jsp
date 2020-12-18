@@ -8,50 +8,45 @@
 <div class="container"   style="padding-left: 80px;padding-right: 130px">	
 <h1>FAQs</h1>
 <h5>
-What is the difference between logging in as an IPT user vs TACC user?
+1. Does GIB support LDAP integration?
 <br>
-Answer: TACC users are users with TACC allocations and have created accounts through the TACC portal. Any user who meets these requirements should log in as a TACC user. All other users should create IPT user accounts and log in as an IPT user.
-<br>
-<br>
-Does it matter which account - TACC or IPT - I use to login? 
-<br>
-Answer: Yes, users with TACC accounts should log in as TACC users. All other users should log in as IPT users. 
+-  Yes. Uncomment the ladp configuration from appconfig-security.xml, update credentials for ldap and follow the instructions from the code by searching for comments with keywords "enable ldap".
 <br>
 <br>
-I just uploaded a file but when I type 'ls' in the terminal I do not see my file?
+2. How can the batch computing mode be set-up on GIB?
 <br>
-Answer: Hit the Refresh List button and look for your file in the select dropdown. 
-<br>
-<br>
-How do I know if my files successfully uploaded? 
-<br>
-Answer: Type "ls" (as in list) in the directory that the files were uploaded in.
+-  If the ldap is enabled on the portal then only ldap users can access batch mode, otherwise all the users have access to batch computing mode by default.
 <br>
 <br>
-What directory to files get uploaded to?
+3. What if we need more Wetty containers than what can be provisioned on one VM?
 <br>
-Answer: /home/gib/
-<br>
-It does not matter if this is not the current directory that the user is in. 
+ - Multiple VMs with more containers can be registered to accomplish this. In the next release of the code, Docker Swarm and the code for orchestration of the VMs will be added to GIB.
 <br>
 <br>
-What types of actions can you perform in the terminal?
+4. How many minimum VMs do we need for setting up a web-portal with GIB?
 <br>
-Answer: Any basic linux commands, create and edit files, as well as compile and run programs. 
-<br>
-<br>
-How do I submit a job?
-<br>
-Answer: You can only submit compile and run jobs if you are logged in with your TACC user account. All other users will only be able to run IPT to generate parallel code but not compile and run the generated code on Stampede2 or Comet.
+-  Two VMs are needed. One for the GIB web-portal and other for multiple Wetty terminals.
 <br>
 <br>
-How can I use IPT from this web portal?
+5. How can we add SSL certificates and make the web-portal secure?
 <br>
-Answer: The steps for using IPT from this web portal are presented at the following link: <a href="https://www.youtube.com/watch?v=AypWQf-yJus" target="_blank">https://www.youtube.com/watch?v=AypWQf-yJus</a> .
-<!-- I do not see my job showing in the list?
+-  As a first step, you will need to have domain-names secured for your IP addresses associated with the VMs. As a next step, you will need to request for SSL certificates from your organization or purchase them. You will need to add the SSL certificates to the /etc/ssl/certs and keys to /etc/ssl/private.
 <br>
-Answer: The job hasn't been stored in DB, please check your DB connection.
-<br> -->
+<br>
+6. Is Docker swarm supported?
+<br>
+-  Currently it is under development and testing. It will be available very soon.
+<br>
+<br>
+7. What are some of the projects that use GIB?
+<br>
+-  Interactive Parallelization Tool at TACC uses GIB: https://iptweb.tacc.utexas.edu/entry
+<br>
+<br>
+8. What are the tools and technologies used to build GIB?
+<br>
+-  The GIB portal is developed using Java Spring, MYSQL, python flask APIs, Bash scripting, Greyfish(https://github.com/ritua2/greyfish). Interactive access is provided using Wetty terminals. 
+<br>
 </h5>
                 
 

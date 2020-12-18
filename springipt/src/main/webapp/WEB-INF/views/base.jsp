@@ -31,7 +31,7 @@
 
 	<!-- Navbar -->
 	<div class="navbar" style="width: 100%; border-radius: 0;">
-		<div class="container" style="width: 74%">
+		<div class="container" style="width: 93%">
 
 			<!--Tabs-->
 			<c:if test="${pageContext.request.userPrincipal.name != null}">
@@ -71,7 +71,8 @@
 
 				<c:if test="${(sessionScope.is_admin != 'true') && (sessionScope.is_ldap != 'true')}">
 					<a href="${contextPath}/terminal">Terminal</a>
-				<%--	<a href="${contextPath}/jobHistory">Job History</a> --%>
+					<a href="${contextPath}/compileRun">Compile & Run</a> <%--- comment this line when enble ldap --%>
+					<a href="${contextPath}/jobHistory">Job History</a> <%--- comment this line when enble ldap --%>
 					<a data-toggle="dropdown" href="#" aria-expanded="false">Help
                 			<span class="caret"></span></a>
 					<ul class="dropdown-menu" style="margin-left: 28.5%; margin-top: 0px">
@@ -111,7 +112,7 @@
 				<a href="${contextPath}/comments">Message Board</a>
 				<a href="${contextPath}/aboutus">About Us</a>
 
-				<ul class="nav navbar-nav navbar-right">
+				<ul class="nav navbar-nav navbar-right" style="margin-right: 16.5%">
 					<li><a href="/registration"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 					<li><a href="/login_normal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 				</ul>

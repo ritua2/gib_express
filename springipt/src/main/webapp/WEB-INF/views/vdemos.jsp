@@ -6,8 +6,8 @@
 <jsp:include page="base.jsp" />
 
 <div class="container" style="padding-left: 80px;">
-  <h3>The usage of IPT is demonstrated through the following videos:</h3>
-  <br><br>
+  <h3>Sample video-demos:</h3>
+  <br>
  
   <table>
     <tbody>
