@@ -107,7 +107,7 @@
                 
               <div>
                       
-                <h3 class="logo"><a href="https://www.utsa.edu//"> UTSA </a>|<a href="/"> IPT </a></h3>
+                <h3 class="logo"><a href="https://www.utsa.edu//"> UTSA </a>|<a href="/"> GIB </a></h3>
                   <div class="social-icons">
                     <p>
                       &nbsp; &nbsp;
