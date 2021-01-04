@@ -1231,13 +1231,13 @@ def new_job():
 
         return "User is not logged in correctly"
 
-    if type_of_user[0] == "false":
+    #if type_of_user[0] == "false": # uncomment to enable ldap
 
         # Deletes the job data if it exists
-        if os.path.exists(greyfish_commonuser_job_loc):
-            os.remove(greyfish_commonuser_job_loc)
+        #if os.path.exists(greyfish_commonuser_job_loc):  # uncomment to enable ldap
+         #   os.remove(greyfish_commonuser_job_loc)   # uncomment to enable ldap
 
-        return "User is not authorized to submit jobs"
+        #return "User is not authorized to submit jobs"   # uncomment to enable ldap
 
 
 
