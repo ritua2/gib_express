@@ -35,11 +35,9 @@ URL_BASE = os.environ["URL_BASE"]
 MYSQL_USER = os.environ["MYSQL_USER"]
 MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
 MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
-REDIS_AUTH = os.environ["REDIS_AUTH"]
 orchestra_key = os.environ["orchestra_key"]
 PROJECT = os.environ["PROJECT"]
 GREYFISH_URL = URL_BASE
-GREYFISH_REDIS_KEY = REDIS_AUTH
 CURDIR = os.path.dirname(os.path.realpath(__file__)) # Current directory
 
 

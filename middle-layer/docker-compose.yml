@@ -17,7 +17,6 @@ services:
         volumes:
           - greyfish:/greyfish
         environment:
-            - REDIS_AUTH
             - orchestra_key
             - URL_BASE
             - PROJECT
@@ -48,19 +47,8 @@ services:
             - MYSQL_DATABASE
             - MYSQL_USER
             - MYSQL_PASSWORD
-            - REDIS_AUTH
 
         command: "tail -F anything"
-
-    # Temporary keys and instance information
-    redis:
-        image: 'redis:4-alpine'
-        container_name: redis
-        environment:
-            - REDIS_AUTH
-        command: redis-server --requirepass $REDIS_AUTH
-        ports:
-            - '6379:6379'
 
 
 volumes:
