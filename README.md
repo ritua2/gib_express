@@ -32,8 +32,7 @@ cd gib_express
 # The variale values  are used for setting up the credentails and using them later
 vi middle-layer/.env
 
-# Set the values of the following variables as per your choice in the .env file.
-REDIS_AUTH=redpassword            
+# Set the values of the following variables as per your choice in the .env file.          
 # Mysql will be set with default credentials defined in three lines below. If user would like to change it, update credentials here now and update the relavent values in start.sql after updating this(.env) file
 MYSQL_ROOT_PASSWORD=password
 MYSQL_USER=iptuser
