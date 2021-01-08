@@ -11,7 +11,7 @@ https://youtu.be/AImrskhIrVw
 
 Thanks to the National Science Foundation (NSF) for awards # 1642396 and #2039142 - these awards supported products from which GIB has been derived.
 
-##License
+## License
 Copyright (c) 2021, The University of Texas at San Antonio
 Copyright (c) 2021, Ritu Arora
  
