@@ -5,6 +5,12 @@ GIB is a reusable and a portable framework for building web portals that support
 
 GIB is derived from the software funded by NSF awards # 1642396 (IPT web portal) and 2039142 (BOINC@TACC portal).
 
+Here is a video-demo of a raw (not secured with SSL certificates) instance of GIB that is fully-customizable:
+
+https://youtu.be/AImrskhIrVw
+
+Thanks to the National Science Foundation (NSF) for awards # 1642396 and #2039142 - these awards supported products from which GIB has been derived.
+
 -----------------
 
 ## Instructions
