@@ -155,5 +155,5 @@ Delete data corresponding to jobs already run (may be run as a cron job):
 ```
 
 
-NB: As of right now, GIB only supports Stampede2, Lonestar5 (Texas Advanced Computing Center), and Comet (San Diego Supercomputer Center).
+NB: By default GIB only supports Stampede2, Lonestar5 (Texas Advanced Computing Center), and Comet (San Diego Supercomputer Center). The developers will need to customize GIB for supporting additional supercomputing platforms. For example, the names of the preferred systems will need to be updated on the "Compile and Run" (compileRun) page, and the appropriate commands for supporting batch job submission will need to be added (by default Slurm job scheduler is supported).
 
