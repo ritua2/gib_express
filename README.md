@@ -12,6 +12,7 @@ https://youtu.be/AImrskhIrVw
 Installation videos:
 
 Step 1: https://www.youtube.com/watch?v=nWyZgWAy0Ag
+
 Step 2: https://www.youtube.com/watch?v=so1tQQYUFZY
 
 Thanks to the National Science Foundation (NSF) for awards # 1642396 and #2039142 - these awards supported products from which GIB has been derived.
