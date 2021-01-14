@@ -50,7 +50,7 @@
       </div>
       </td>
       <td valign="top">
-      <a data-toggle="tooltip"  style="border-bottom:1px dotted #000;text-decoration: none;" title="Upload Additional Files and they will show up in /home/ipt within your IPT terminal."><h3>File Upload</h3></a>
+      <a data-toggle="tooltip"  style="border-bottom:1px dotted #000;text-decoration: none;" title="Upload Additional Files and they will show up in /home/ipt within your IPT terminal."><h3>Upload File/Folder</h3></a>
       <form id="uploadForm" action="${contextPath}/terminal/upload" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div id="myRadioGroup">
