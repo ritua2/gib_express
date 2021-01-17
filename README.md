@@ -3,7 +3,7 @@ Gateway-In-a-Box: A Portable Solution for Developing Science Gateways that Suppo
 
 GIB is a reusable and a portable framework for building web portals that support computation and analyses on remote computing resources from the convenience of the web-browser. It is mainly written in Java/Java EE. It provides support for an interactive terminal emulator, batch job submission, file management, storage-quota management, message board, user account management, and also provides an admin console. GIB can be easily deployed on the resources in the cloud or on-premises. 
 
-GIB is derived from the software funded by NSF awards # 1642396 (IPT web portal) and 2039142 (BOINC@TACC portal).
+GIB is derived from the software funded by NSF awards # 1642396 and 2039142 - some of the deliverables associated with both these awards involved the development of the web-portals/science gateways with features such as persistent cloud-based storage, file/folder management, and discussion forums. 
 
 Here is a video-demo of a raw (not secured with SSL certificates) instance of GIB that is fully-customizable:
 
