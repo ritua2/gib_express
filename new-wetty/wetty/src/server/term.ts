@@ -15,7 +15,9 @@ export default class Term {
     const term = spawn('/usr/bin/env', args, xterm);
     const address = args[0] === 'ssh' ? args[1] : 'localhost';
     events.spawned(term.pid, address);
+    term.write('If you are not logged in automatically please click on the Terminal tab again.');
     socket.emit('login');
+    socket.emit('data');
     term.on('exit', code => {
       events.exited(code, term.pid);
       socket.emit('logout');
