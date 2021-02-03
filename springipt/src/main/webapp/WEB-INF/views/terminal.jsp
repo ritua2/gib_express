@@ -1,3 +1,4 @@
+<%@ page session="true"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <%@ page import="java.util.*" %>
@@ -35,8 +36,12 @@
     <tr>
       <td width="75%">
       <div class="terminal">
-        
+        <c:if test="${sessionScope.is_cilogon == true}">
+        <c:set var="username" value="${sessionScope.curusername}" />
+        </c:if>
+        <c:if test="${sessionScope.is_cilogon != true}">
         <c:set var="username" value="${pageContext.request.userPrincipal.name}" />
+        </c:if>
         <c:set var="path" value="${contextPath}" />
 
 	  

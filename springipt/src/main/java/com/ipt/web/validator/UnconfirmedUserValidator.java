@@ -15,6 +15,7 @@ import com.ipt.web.model.LoginUser;
 import com.ipt.web.model.UnconfirmedUser;
 
 import com.ipt.web.repository.UserRepository;
+import com.ipt.web.repository.UnconfirmedUserRepository;
 
 import com.ipt.web.service.LoginUserService;
 import com.ipt.web.service.UserService;
@@ -27,8 +28,12 @@ public class UnconfirmedUserValidator implements Validator {
 	@Autowired
     private LoginUserService loginUserService;
 	
-	 @Autowired
+	@Autowired
     private UserRepository userRepository;
+
+	@Autowired
+    private UnconfirmedUserRepository unconfirmeduserRepository;
+
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -54,7 +59,7 @@ public class UnconfirmedUserValidator implements Validator {
             errors.rejectValue("username", "Duplicate.userForm.username");
         }
 		
-		Boolean flag=false;
+		Boolean flag=false,flag1=false;
 		
 		try{
 			File file4 = new File("Users.txt");
@@ -72,7 +77,19 @@ public class UnconfirmedUserValidator implements Validator {
 					}
 				}
 			}
-		}
+			}
+			if(unconfirmeduserRepository.findAll().size()!=0){
+                        for(UnconfirmedUser uu:unconfirmeduserRepository.findAll()){
+                                fileWriter.write("\n");
+                                fileWriter.write("Email: "+ uu.getEmail());
+                                if(uu.getEmail()!=null){
+                                        if(uu.getEmail().equals(user.getEmail())){
+                                                flag1=true;
+                                                break;
+                                        }
+                                }
+                        }
+                        }
 			fileWriter.flush();
 			fileWriter.close();
 		}catch(IOException e){
@@ -81,6 +98,8 @@ public class UnconfirmedUserValidator implements Validator {
 		
 		if(flag)
 			errors.rejectValue("email", "Duplicate.userForm.email");
+		if(flag1)
+                        errors.rejectValue("email", "Pending.verification.email");
 			
 			
 			

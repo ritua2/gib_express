@@ -1,4 +1,4 @@
-<%@ page session="false"%>
+<%@ page session="true"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -27,7 +27,12 @@
 		modelAttribute="commentForm" action="${commentActionUrl}">
 
 		<form:hidden path="id" />
+		<c:if test="${sessionScope.is_cilogon == true}">
+		<form:hidden path="createdby" value = "${sessionScope.curusername}"/>
+		</c:if>
+		<c:if test="${sessionScope.is_cilogon != true}">
 		<form:hidden path="createdby" value = "${pageContext.request.userPrincipal.name}"/>
+		</c:if>
 
 		<spring:bind path="title">
 			<div class="form-group ${status.error ? 'has-error' : ''}">

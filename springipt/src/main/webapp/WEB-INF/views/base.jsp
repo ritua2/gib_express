@@ -96,9 +96,35 @@
 			</c:if>
 
 
+			
+
 			<c:if test="${pageContext.request.userPrincipal.name == null}">
+					<a href="/">Home</a>
+			<c:if test="${(sessionScope.is_cilogon == 'true')}">
+					<a href="${contextPath}/terminal">Terminal</a>
+					<a href="${contextPath}/compileRun">Compile & Run</a> <%--- comment this line when enble ldap --%>
+					<a href="${contextPath}/jobHistory">Job History</a> <%--- comment this line when enble ldap --%>
+					<a data-toggle="dropdown" href="#" aria-expanded="false">Help
+                			<span class="caret"></span></a>
+					<ul class="dropdown-menu" style="margin-left: 28.5%; margin-top: 0px">
+	                			<li><a href="/faq">FAQ</a></li>
+	                			<li><a href="/help">User Guide</a></li>
+						<li><a href="/vdemos">Video Demos</a></li>
+						<li><a href="/contactus">Contact Us</a></li>
+					</ul>
+
 				
-				<a href="/">Home</a>
+
+				<a href="${contextPath}/comments">Message Board</a>
+				<a href="${contextPath}/aboutus">About Us</a>
+
+				<ul class="nav navbar-nav navbar-right">
+					<a href="/"">Welcome ${sessionScope.curusername}</a>
+					<a href="/perform_logout"> Logout <span class="glyphicon glyphicon-log-out"></span></a>
+				</ul>
+				</c:if>
+	
+				<c:if test="${(sessionScope.is_cilogon != 'true')}">
 
 				<a data-toggle="dropdown" href="#" aria-expanded="false">Help
                 			<span class="caret"></span></a>
@@ -115,7 +141,10 @@
 				<ul class="nav navbar-nav navbar-right" style="margin-right: 16.5%">
 					<li><a href="/registration"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 					<li><a href="/login_normal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+
+
 				</ul>
+				</c:if>
 			</c:if>
 
 			<!-- End Tabs -->

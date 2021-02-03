@@ -40,7 +40,12 @@ public class MainController {
 		public String showJobHistory(Model model, HttpServletRequest request) {
 
 			//List<Job> jobs = jobHistoryRepository.findAll();
-			List<Job> jobs = jobHistoryRepository.findByUserName(request.getUserPrincipal().getName());
+
+			List<Job> jobs = null;
+			if(request.getSession().getAttribute("is_cilogon").toString()=="true")
+			jobs = jobHistoryRepository.findByUserName(request.getSession().getAttribute("curusername").toString());
+			else
+			jobs = jobHistoryRepository.findByUserName(request.getUserPrincipal().getName());
 			//List<MappedUser> jobs = jobHistoryRepository.findAll();
 			//List<Job> jobs = new ArrayList<Job>();
 			model.addAttribute("jobs", jobs);

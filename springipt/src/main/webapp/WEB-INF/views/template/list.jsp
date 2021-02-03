@@ -1,4 +1,4 @@
-<%@ page session="false"%>
+<%@ page session="true"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -18,8 +18,8 @@
 				<strong>${msg}</strong>
 			</div>
 		</c:if>
-		
-		<c:if test="${pageContext.request.userPrincipal.name != null}">
+
+		<c:if test="${(pageContext.request.userPrincipal.name != null) || (sessionScope.is_cilogon == true)}">
 		<button class="btn btn-primary"
 							onclick="location.href='/template/addcomment'">Post Comment</button>
 		<!--<h3>Click <a href="/springipt/template/addcomment">here</a> to post a comment</h3>-->
@@ -47,8 +47,8 @@
 						<spring:url value="/comments/${comment.id}/reply" var="replyUrl" />
 
 						<button class="btn btn-info" onclick="location.href='${userUrl}'">Details</button>
-						<c:if test="${pageContext.request.userPrincipal.name != null}">
-						<c:if test="${pageContext.request.userPrincipal.name == comment.createdby}">
+						<c:if test="${(pageContext.request.userPrincipal.name != null) || (sessionScope.is_cilogon == true)}">
+						<c:if test="${(pageContext.request.userPrincipal.name == comment.createdby) || (sessionScope.curusername == comment.createdby)}">
 						<button class="btn btn-primary"
 							onclick="location.href='${updateUrl}'">Edit</button>
 						<button class="btn btn-danger"

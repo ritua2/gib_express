@@ -117,6 +117,9 @@ public class UploadController {
 				BufferedReader reader=null;
 				URL url = null;
 				StringBuilder result = new StringBuilder();
+				if(request.getSession().getAttribute("is_cilogon").toString()=="true")
+				loggedin_user=request.getSession().getAttribute("curusername").toString();
+				else
 				loggedin_user=request.getUserPrincipal().getName();
 				
 				if(loggedin_user.contains(" "))
@@ -326,7 +329,10 @@ public class UploadController {
 		URL url = null;
 		String jsonInputString=null, key=null;
 		StringBuilder result = new StringBuilder();
-		loggedin_user=request.getUserPrincipal().getName();
+		if(request.getSession().getAttribute("is_cilogon").toString()=="true")
+			loggedin_user=request.getSession().getAttribute("curusername").toString();
+		else
+			loggedin_user=request.getUserPrincipal().getName();
 				
 		if(loggedin_user.contains(" "))
 			loggedin_user=loggedin_user.replace(" ","_");
@@ -359,7 +365,10 @@ public class UploadController {
 			FileWriter fileWriter = new FileWriter(file1);
 			fileWriter.write("Result: "+result.toString());
 			fileWriter.write("\n");
-			fileWriter.write("User: "+request.getUserPrincipal().getName());
+			if(request.getSession().getAttribute("is_cilogon").toString()=="true")
+				fileWriter.write("User :"+request.getSession().getAttribute("curusername").toString());
+			else
+				fileWriter.write("User: "+request.getUserPrincipal().getName());
 			fileWriter.write("\n");
 			fileWriter.write("JSON: "+jsonInputString);
 			fileWriter.write("\n");
@@ -472,7 +481,7 @@ public class UploadController {
 	
 	
 	@GetMapping("/compileRun")
-	public String compileRunStatus(Authentication authentication) {
+	public String compileRunStatus(Authentication authentication, HttpServletRequest request) {
 		
 		/*try{
 			File file1 = new File("UserDetails.txt");
@@ -487,8 +496,7 @@ public class UploadController {
 		}catch(IOException e){
 			e.printStackTrace();
 			}*/
-		
-		if(authentication.getPrincipal().toString().contains("ROLE_ADMIN"))
+		if( request.getSession().getAttribute("is_cilogon").toString()=="true" || authentication.getPrincipal().toString().contains("ROLE_ADMIN"))
 		return "compileRun_v5";
 	else{
 		/*if(authentication.getPrincipal().toString().contains("Not granted any authorities")){
@@ -690,15 +698,19 @@ public class UploadController {
 				crcommand1_new.append(" "+fragments[i]);
 		}
 			
-		
+		String uname=null;
+		if(request.getSession().getAttribute("is_cilogon").toString()=="true")
+			uname=request.getSession().getAttribute("curusername").toString();
+		else
+			uname=request.getUserPrincipal().getName();
 		try{
 			//set the JSON based on operation chosen
 			if(radios.equals("radio1")){
-				jsonInputString = "{\"key\":\""+okey+"\",\"User\":\""+request.getUserPrincipal().getName()+"\", \"origin\":\"web\", \"Job\":\"Compile\", \"CC\": \"1\", \"C0\": \""+ccommand+"\", \"modules\":\""+modules1+"\", \"sc_system\":\""+system+"\",\"ID\":\""+saltStr+"\",\"output_files\":\""+"Fixed_Dummy"+"\", \"dirname\":\""+f2.getName().toString().substring(0,f2.getName().toString().indexOf("."))+"\",\"sc_queue\":\""+queue+"\",\"n_nodes\":\"1\",\"n_cores\":\"1\", \"runtime\": \"00:10:00\"}";
+				jsonInputString = "{\"key\":\""+okey+"\",\"User\":\""+uname+"\", \"origin\":\"web\", \"Job\":\"Compile\", \"CC\": \"1\", \"C0\": \""+ccommand+"\", \"modules\":\""+modules1+"\", \"sc_system\":\""+system+"\",\"ID\":\""+saltStr+"\",\"output_files\":\""+"Fixed_Dummy"+"\", \"dirname\":\""+f2.getName().toString().substring(0,f2.getName().toString().indexOf("."))+"\",\"sc_queue\":\""+queue+"\",\"n_nodes\":\"1\",\"n_cores\":\"1\", \"runtime\": \"00:10:00\"}";
 			}else if(radios.equals("radio2")){
-				jsonInputString = "{\"key\":\""+okey+"\",\"User\":\""+request.getUserPrincipal().getName()+"\", \"origin\":\"web\", \"Job\":\"Run\", \"RC\": \"1\", \"R0\": \""+rcommand+"\", \"modules\":\""+modules2+"\", \"sc_system\":\""+system+"\",\"ID\":\""+saltStr+"\",\"output_files\":\""+"Fixed_Dummy"+"\", \"dirname\":\""+f2.getName().toString().substring(0,f2.getName().toString().indexOf("."))+"\",\"sc_queue\":\""+jobq+"\",\"n_nodes\":\""+numnodes+"\",\"n_cores\":\""+numcores+"\", \"runtime\": \""+rtime+"\"}";
+				jsonInputString = "{\"key\":\""+okey+"\",\"User\":\""+uname+"\", \"origin\":\"web\", \"Job\":\"Run\", \"RC\": \"1\", \"R0\": \""+rcommand+"\", \"modules\":\""+modules2+"\", \"sc_system\":\""+system+"\",\"ID\":\""+saltStr+"\",\"output_files\":\""+"Fixed_Dummy"+"\", \"dirname\":\""+f2.getName().toString().substring(0,f2.getName().toString().indexOf("."))+"\",\"sc_queue\":\""+jobq+"\",\"n_nodes\":\""+numnodes+"\",\"n_cores\":\""+numcores+"\", \"runtime\": \""+rtime+"\"}";
 			}else{
-				jsonInputString = "{\"key\":\""+okey+"\",\"User\":\""+request.getUserPrincipal().getName()+"\", \"origin\":\"web\", \"Job\":\"Both\", \"CC\": \"1\", \"RC\": \"1\",\"C0\": \""+crcommand1+"\", \"R0\": \""+crcommand2+"\", \"modules\":\""+modules3+"\", \"sc_system\":\""+system+"\",\"ID\":\""+saltStr+"\",\"output_files\":\""+"Fixed_Dummy"+"\", \"dirname\":\""+f2.getName().toString().substring(0,f2.getName().toString().indexOf("."))+"\",\"sc_queue\":\""+jobq2+"\",\"n_nodes\":\""+numnodes2+"\",\"n_cores\":\""+numcores2+"\", \"runtime\": \""+rtime2+"\"}";
+				jsonInputString = "{\"key\":\""+okey+"\",\"User\":\""+uname+"\", \"origin\":\"web\", \"Job\":\"Both\", \"CC\": \"1\", \"RC\": \"1\",\"C0\": \""+crcommand1+"\", \"R0\": \""+crcommand2+"\", \"modules\":\""+modules3+"\", \"sc_system\":\""+system+"\",\"ID\":\""+saltStr+"\",\"output_files\":\""+"Fixed_Dummy"+"\", \"dirname\":\""+f2.getName().toString().substring(0,f2.getName().toString().indexOf("."))+"\",\"sc_queue\":\""+jobq2+"\",\"n_nodes\":\""+numnodes2+"\",\"n_cores\":\""+numcores2+"\", \"runtime\": \""+rtime2+"\"}";
 				
 				//jsonInputString = "{\"key\":\""+okey+"\",\"User\":\""+request.getUserPrincipal().getName()+"\", \"origin\":\"web\", \"Job\":\"Both\", \"CC\": \"1\", \"RC\": \"1\",\"C0\": \""+crcommand1_new.toString()+"\", \"R0\": \""+crcommand2_new.toString()+"\", \"modules\":\""+modules3+"\", \"sc_system\":\""+system+"\",\"ID\":\""+saltStr+"\",\"output_files\":\""+"Fixed_Dummy"+"\", \"dirname\":\""+f2.getName().toString().substring(0,f2.getName().toString().indexOf("."))+"\",\"sc_queue\":\""+jobq+"\",\"n_nodes\":\""+numnodes2+"\",\"n_cores\":\""+numcores2+"\", \"runtime\": \""+rtime2+"\"}";
 			}
@@ -723,7 +735,7 @@ public class UploadController {
 			fileWriter.write("\n");
 			fileWriter.write("URL: "+ url.toString());
 			fileWriter.write("\n");
-			fileWriter.write(request.getUserPrincipal().getName());
+			fileWriter.write(uname);
 			fileWriter.write("\n");
 			fileWriter.write(jsonInputString);
 			fileWriter.write("\n");

@@ -393,6 +393,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
         return "login_normal";
       }
     
+     @GetMapping(value = "/login_cilogon")
+      public String login_cilogon(Model model, String error, String logout) {
+	      String client_id="cilogon:/client_id/59a97b6d0be2e7f15032531bce7eb9aa";
+	      String scope="openid+profile+email+org.cilogon.userinfo+edu.uiuc.ncsa.myproxy.getcert";
+	      String redirect_uri="https://149.165.156.109:8443/welcome";
+	      String redirecturl="https://cilogon.org/authorize/?response_type=code&client_id="+client_id+"&redirect_uri="+redirect_uri+"&scope="+scope;
+	      return "redirect:" + redirecturl;
+      }
     
     
     
@@ -400,10 +408,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
       public String logout1(HttpServletRequest request) {
         
         if(request.getSession().getAttribute("mySessionAttribute")!=null && !(request.getSession().getAttribute("mySessionAttribute").toString().contains("Error")))
-          com.ipt.web.service.WaitService.freeInstance(request.getUserPrincipal().getName(),request.getSession().getAttribute("mySessionAttribute").toString());
-        
+	{
+		if(request.getSession().getAttribute("is_cilogon").toString()=="true")
+			com.ipt.web.service.WaitService.freeInstance(request.getSession().getAttribute("curusername").toString(),request.getSession().getAttribute("mySessionAttribute").toString());
+		else
+			com.ipt.web.service.WaitService.freeInstance(request.getUserPrincipal().getName(),request.getSession().getAttribute("mySessionAttribute").toString());
+	}
         CurrentUser currentUser = new CurrentUser();
-        currentUser.setUsername(request.getUserPrincipal().getName().toString().replace(" ","_"));
+	if(request.getSession().getAttribute("is_cilogon").toString()=="true")
+	{
+		currentUser.setUsername(request.getSession().getAttribute("curusername").toString());
+	}
+	else
+	{
+		currentUser.setUsername(request.getUserPrincipal().getName().toString().replace(" ","_"));
+	}
         currentUser.setUser_type(request.getSession().getAttribute("is_ldap").toString());
         
         currentUserRepository.delete(currentUser);
@@ -416,13 +435,142 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
       }
     
     @GetMapping(value = {"/", "/welcome"})
-      public String welcome(HttpServletRequest request, Model model, HttpSession session, Principal principal, Authentication authentication) {
-        
+      public String welcome(@RequestParam(defaultValue="empty") String code,HttpServletRequest request, Model model, HttpSession session, Principal principal, Authentication authentication) {
+	
+	Boolean is_cilogon=false;
         Boolean abc=false;
         Boolean is_ldap=false;
         Boolean check=false;
         check=null == principal;
-        
+ 
+        if(!code.equals("empty"))
+	{
+		System.out.println("Code :"+code);
+		String client_id="cilogon:/client_id/59a97b6d0be2e7f15032531bce7eb9aa";
+		String client_secret="7F9KZuY21mTUT2anuAxec4Ui4Sm75BBrPtAm5NqsFTlmws2hI0xLcYOFiXeWLqIc8k0UTl9MQF3HqDAFmbYdZw";
+		String redirect_uri="https://149.165.156.109:8443/welcome";
+		StringBuilder result2 = new StringBuilder();
+		try{
+			URL url=new URL("https://cilogon.org/oauth2/token?grant_type=authorization_code&client_id="+client_id+"&client_secret="+client_secret+"&code="+code+"&redirect_uri="+redirect_uri);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod("GET");
+			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line=null;
+			while ((line = rd.readLine()) != null) 
+			{
+				result2.append(line);
+			}
+			rd.close();
+			String[] substr=result2.toString().split(",");
+			String access_token=substr[0].substring(substr[0].indexOf(":")+2,substr[0].length()-1);
+			//System.out.println("token:  "+access_token);
+
+			url=new URL("https://cilogon.org/oauth2/userinfo?access_token="+access_token);
+			conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod("GET");
+			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			line=null;
+			while ((line = rd.readLine()) != null) 
+			{
+				result2.append(line);
+			}
+			rd.close();
+			System.out.println("\n\nBefore info: ");
+			substr=result2.toString().split(",");
+			
+			String name=null, email=null, institute=null;
+			for(String tmp:substr) 
+			{
+				if(tmp.contains("\"name\""))
+					name=tmp.substring(tmp.indexOf(":")+2,tmp.length()-1);
+					//System.out.println("Name: "+name);
+				if(tmp.contains("email"))
+					email=tmp.substring(tmp.indexOf(":")+2,tmp.length()-2);
+					//System.out.println("Email: "+email);
+				if(tmp.contains("idp_name"))
+					institute=tmp.substring(tmp.indexOf(":")+2,tmp.length()-1);
+					//System.out.println("Institute: "+institute);
+			}
+			
+			if((name == null) || (email == null)) return "loginwithother";
+			String[] access_tokens=access_token.split("/");
+			LoginUser lu = null;
+			UnconfirmedUser uc = null;
+			lu = loginUserService.findByEmail(email);
+			uc = userService.findByEmail(email);
+			String userName=email.substring(0,email.indexOf('@'))+email.substring(email.indexOf('@')+1,email.indexOf('@')+3);
+
+			if((lu == null) && (uc == null))
+			{
+				uc = new UnconfirmedUser();
+				uc.setUsername(userName);
+				uc.setEmail(email);
+				uc.setName(name);
+				uc.setInstitution("InstitutionCIL");
+				uc.setCountry("CountryCIL");
+				uc.setPassword(access_tokens[access_tokens.length-1]);
+				uc.setValidation_key("KeyCIL");
+				userService.save(uc);
+		
+				if(unconfirmedUserRepository.findByUsername(userName)!=null)
+				{
+					lu= new LoginUser();
+					lu.setId(unconfirmedUserRepository.findByUsername(userName).getId());
+					lu.setUsername(unconfirmedUserRepository.findByUsername(userName).getUsername());
+					lu.setEmail(unconfirmedUserRepository.findByUsername(userName).getEmail());
+					lu.setName(unconfirmedUserRepository.findByUsername(userName).getName());
+					lu.setInstitution(unconfirmedUserRepository.findByUsername(userName).getInstitution());
+					lu.setCountry(unconfirmedUserRepository.findByUsername(userName).getCountry());
+					lu.setPassword(unconfirmedUserRepository.findByUsername(userName).getPassword());
+					lu.setRole(roleRepository.findOne(1L));
+					userRepository.save(lu);
+					unconfirmedUserRepository.delete(unconfirmedUserRepository.findByUsername(userName));
+				}
+				else return "registrationError";
+			}
+			else
+			{
+				if(uc != null)
+				{
+					return "accountexist";
+				}
+				else if(lu.getCountry().equals("CountryCIL"))
+				{
+					BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+					lu.setPassword(encoder.encode(access_tokens[access_tokens.length-1]));
+					userRepository.save(lu);
+				}
+				else
+				{
+					return "accountexist";
+				}
+			}	
+			is_cilogon=true;
+			session.setAttribute("curusername", userName.toString().replace(" ","_"));
+                	session.setAttribute("is_ldap", is_ldap.toString());
+                	session.setAttribute("is_cilogon", is_cilogon.toString());
+
+			CurrentUser currentUser = new CurrentUser();
+			currentUser.setUsername(userName.toString().replace(" ","_"));
+			currentUser.setUser_type(is_ldap.toString());
+			new File("/home/greyfish/users/sandbox/DIR_"+userName.toString().replace(" ","_")).mkdirs();
+			new File("/home/greyfish/users/sandbox/DIR_"+userName.toString().replace(" ","_")+"/home").mkdirs();
+			new File("/home/greyfish/users/sandbox/DIR_"+userName.toString().replace(" ","_")+"/home/gib").mkdirs();
+			new File("/home/greyfish/users/sandbox/DIR_"+userName.toString().replace(" ","_")+"/home/gib/home").mkdirs();
+			new File("/home/greyfish/users/sandbox/DIR_"+userName.toString().replace(" ","_")+"/home/gib/home/gib").mkdirs();
+	
+			currentUserRepository.save(currentUser);          
+			return "welcome";
+		}
+		catch(MalformedURLException e){
+			e.printStackTrace();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+
+	}
+       
         if(!check){
           abc=request.isUserInRole("ROLE_ADMIN");
           session.setAttribute("is_admin", abc.toString());
@@ -479,7 +627,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
         if(session.getAttribute("is_ldap")=="true"){
           if(authentication.getName().toString().contains(" "))
             loggedin_user=authentication.getName().toString().replace(" ","_");
-        }else
+        }else if(session.getAttribute("is_cilogon")=="true"){
+            loggedin_user=session.getAttribute("curusername").toString().replace(" ","_");	
+	}else
           loggedin_user=request.getUserPrincipal().getName();
         
         

@@ -34,8 +34,9 @@
             		<span>${error}</span>
             		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			<button class="btn btn-lg btn-primary btn-block" type="submit" onclick="login_test()">Log In</button>
-			<br> <br>
-
+			<br>
+			<a href="${contextPath}/login_cilogon" text="Log In with CILogon">Log In with CILogon</a>
+			<br>
 			<a href="${contextPath}/forgotPassword" text="resetPassword">Reset Password</a>
             
        		</div>

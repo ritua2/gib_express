@@ -31,4 +31,9 @@ public class UserServiceImpl implements UserService {
     public UnconfirmedUser findByUsername(String username) {
         return unconfirmedUserRepository.findByUsername(username);
     }
+    
+    @Override
+    public UnconfirmedUser findByEmail(String email) {
+        return unconfirmedUserRepository.findByEmail(email);
+    }
 }

@@ -6,4 +6,6 @@ public interface UserService {
     void save(UnconfirmedUser user);
 
     UnconfirmedUser findByUsername(String user);
+    
+    UnconfirmedUser findByEmail(String email);
 }
