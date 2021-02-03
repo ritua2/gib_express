@@ -105,30 +105,81 @@ https://URL_BASE:8443
 
 Notes:
 
-This should be done on a different VM than the one on which the middle-layer and front-end are installed.
+Wetty should be installed on the different VMs than the one on which the middle-layer and front-end are installed.
+To setup Wetty with Docker Swarm cluster, at least two VMs are required for the Wetty cluster. There will be two types of nodes in the cluster:
+
+1. Manager Node – Pick any VM as manager node
+2. Worker Node – all other VMs except manager node will act as worker nodes
+
+In total, a minimum of three VMs are needed - one for the front-end and the middle-layer, and the other two VMs for the Wetty containers.
+
+*manager_node_ip* refers to the manager node VM’s IP address
 
 *conductor* refers to the IP or URL (without http://, https://, or the ending /) where springIPT is located at.
 
 *orchestra_key* refers to the manager's node key, declared in gib/middle-layer/.env
 
+
+1. On the manager node, initiate Docker swarm and create volume for local storage.
+
 ```bash
-# If not running as root, become root first
-sudo su -
+# Initiate docker swarm on manager node and copy the docker swarm join command appeared on the console after execution
+docker swarm init --advertise-addr manager_node_ip
 
-# Download the git repository
-git clone https://github.com/ritua2/gib_express.git
-
-# Change the directory to the setup script
-cd gib_express
-
-# Make the setup script executable
-chmod +x wetty_setup.sh
-
-# Run the script
-./wetty_setup.sh
-
-# Provide URL_BASE and orchestra key from .env file when promptes. Also provide number of terminals to be run ranging from 1 to 6
+# Create shared volume for rsync on manager node
+docker volume create --name=rsync_data
 ```
+
+
+2. Add all worker nodes to the docker swarm cluster using swarm join command.
+
+```bash
+# Sample docker swarm join command shown below. Execute the copied command in step 1(generated after executing docker swarm init) on each worker node. 
+docker swarm join --token SWMTKN-1-09qr5nh49km67h2b30p84jqwqyxpap3mnivk0b4dbj9x7av70s-bz6a00c5cwlht10h3sye9n12y manager_node_ip:2377
+```
+
+
+
+3. On manager node, start ssh server first and then startup wetty. Starting any container on manager node will replicate it on all of the nodes in swarm cluster.
+
+```bash
+# Start ssh server on manager node
+docker service create -d --name "ssh-wetty" --mode global -e conductor=" IP_ADDRESS_OF_SPRINGIPT" -e orchestra_key="orchestra" -p 4646:22 --mount src=rsync_data,dst=/home/rsync_user/data saumyashah/swarm_easy_wetty_ssh
+
+# Wetty startup on manager node
+docker service create -d --name "w0" --mode global -e conductor=" IP_ADDRESS_OF_SPRINGIPT" -e orchestra_key="orchestra" -p 7000:3000 -p 7100:3100 --mount src=rsync_data,dst=/gib/global/data saumyashah/swarm_easy_wetty_standalone main_daemon
+docker service create -d --name "w1" --mode global -e conductor=" IP_ADDRESS_OF_SPRINGIPT" -e orchestra_key="orchestra" -p 7001:3000 -p 7101:3100 --mount src=rsync_data,dst=/gib/global/data saumyashah/swarm_easy_wetty_standalone main_daemon
+docker service create -d --name "w2" --mode global -e conductor=" IP_ADDRESS_OF_SPRINGIPT" -e orchestra_key="orchestra" -p 7002:3000 -p 7102:3100 --mount src=rsync_data,dst=/gib/global/data saumyashah/swarm_easy_wetty_standalone main_daemon
+docker service create -d --name "w3" --mode global -e conductor=" IP_ADDRESS_OF_SPRINGIPT" -e orchestra_key="orchestra" -p 7003:3000 -p 7103:3100 --mount src=rsync_data,dst=/gib/global/data saumyashah/swarm_easy_wetty_standalone main_daemon
+docker service create -d --name "w4" --mode global -e conductor=" IP_ADDRESS_OF_SPRINGIPT" -e orchestra_key="orchestra" -p 7004:3000 -p 7104:3100 --mount src=rsync_data,dst=/gib/global/data saumyashah/swarm_easy_wetty_standalone main_daemon
+docker service create -d --name "w5" --mode global -e conductor=" IP_ADDRESS_OF_SPRINGIPT" -e orchestra_key="orchestra" -p 7005:3000 -p 7105:3100 --mount src=rsync_data,dst=/gib/global/data saumyashah/swarm_easy_wetty_standalone main_daemon
+```
+
+
+
+* **Testing the installation**
+The front-end would be accessible at the IP address associated with the VM on which the installation was done as shown below:
+http://IPAddress:8443/
+
+
+
+* **Removing the gib containers**
+
+To kill and remove the gib containers, except wetty instances:
+```bash
+docker kill manager_node && docker rm manager_node
+docker kill greyfish && docker rm greyfish
+docker kill tomcat_springipt && docker rm tomcat_springipt
+docker kill mysql_springipt && docker rm mysql_springipt
+```
+
+
+
+If all the containers belong to gib:
+```bash
+docker kill $(docker ps -aq) && docker rm $(docker ps -aq)
+```
+
 
 * **Receiving Jobs**
 
