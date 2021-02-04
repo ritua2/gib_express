@@ -70,7 +70,7 @@ SENDER_EMAIL_PASSWORD=a1
 MYSQL_CONN_URL=jdbc:mysql://${URL_BASE}:6603/iptweb?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=CONVERT_TO_NULL
 # Save the changes and update the start.sql file if needed using "vi springipt/initdb/start.sql" command
 
-# Update client_id, redirect_uri, scope under login_cilogon function and client_id, client_secret, scope under welcome function according to your CILogon registration details
+# Update client_id, scope, redirect_uri under login_cilogon function and client_id, client_secret, redirect_uri under welcome function according to your CILogon registration details
 vi springipt/src/main/java/com/ipt/web/controller/LoginUserController.java
 
 # Make the setup script executable
