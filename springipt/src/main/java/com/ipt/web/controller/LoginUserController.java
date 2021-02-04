@@ -586,7 +586,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
           }
           session.setAttribute("curusername", authentication.getName().toString().replace(" ","_"));
           session.setAttribute("is_ldap", is_ldap.toString());
-          
+          session.setAttribute("is_cilogon", is_cilogon.toString());            
           CurrentUser currentUser = new CurrentUser();
           currentUser.setUsername(authentication.getName().toString().replace(" ","_"));
           currentUser.setUser_type(is_ldap.toString());
