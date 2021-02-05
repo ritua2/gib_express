@@ -496,19 +496,18 @@ public class UploadController {
 		}catch(IOException e){
 			e.printStackTrace();
 			}*/
-		if( request.getSession().getAttribute("is_cilogon").toString()=="true" || authentication.getPrincipal().toString().contains("ROLE_ADMIN"))
+		/*if( request.getSession().getAttribute("is_cilogon").toString()=="true" || authentication.getPrincipal().toString().contains("ROLE_ADMIN"))
 		return "compileRun_v5";
 	else{
-		/*if(authentication.getPrincipal().toString().contains("Not granted any authorities")){
+		if(authentication.getPrincipal().toString().contains("Not granted any authorities")){
 			if(authentication.getPrincipal().toString().substring(0,65).equals("org.springframework.security.ldap.userdetails.LdapUserDetailsImpl"))
 				return "compileRun_v5";
 			else
 				return "accessDenied";
 		}else
-			return "accessDenied";*/ //uncomment this block and remove the line below to enable ldap
-		return "accessDenied";
-	}
-		
+			return "accessDenied";
+	}*/ //uncomment this block and remove the line below to enable ldap
+		return "compileRun_v5";
 	}
 	
 	@RequestMapping(value = "/compileRunJob", method = RequestMethod.POST, produces = "application/json")
