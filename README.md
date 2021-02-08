@@ -160,3 +160,32 @@ Delete data corresponding to jobs already run (may be run as a cron job):
 
 NB: By default GIB supports Stampede2, Lonestar5 (Texas Advanced Computing Center), and Comet (San Diego Supercomputer Center). The developers will need to customize GIB for supporting additional supercomputing platforms. For example, the names of the preferred systems will need to be updated on the "Compile and Run" (compileRun) page, and the appropriate commands for supporting batch job submission will need to be added - by default Slurm job scheduler is supported and the support for other schedulers will need to be added.
 
+
+* **Authentication Customization**
+
+By default, authentication is enabled via web portal (that is, using the web portal credentials) and CILogon(after updating CILogon configuration while setting up the web portal).
+To enable LDAP authentication, follow the instructions(with keyword "enable ldap") mentioned on each page mentioned below:
+1. login_normal.jsp
+2. traffic.py
+3. UploadController.java
+4. appconfig-security.xml
+
+* **Customizing access to "compile and run" page**
+
+By default, all the users have access to the "compile and run" page.
+
+To restrict access such that only:
+
+1. LDAP and CILogon users can access this page, uncomment the code under compileRunStatus function inside UploadController.java as instructed on the second last line of the method (line #509).
+2. LDAP users can access the page, uncomment the code under compileRunStatus function inside UploadController.java as instructed on the second last line of the method (line #509) and remove " request.getSession().getAttribute("is_cilogon").toString()=="true" || " from the if-condition at line #499
+3. CIlogon users can access the page, then uncomment the following code on line #499 & line #500
+```bash
+if( request.getSession().getAttribute("is_cilogon").toString()=="true" || authentication.getPrincipal().toString().contains("ROLE_ADMIN"))
+return "compileRun_v5";
+```
+and append followiing lines,
+
+```bash
+else
+return "accessDenied";
+```
