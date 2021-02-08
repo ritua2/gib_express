@@ -192,4 +192,4 @@ return "accessDenied";
 
 Note:
 
-If a user is already using terminal in one browser and tries to access terminal in different browser simultaneously then they won't be able to access it. We are working on this and will release a new feature/fix related to this soon. The new feature/fix will allow developers to customize the number of simultaneous terminal sessions allowed per user.
+If a user is already using terminal in one browser and tries to access terminal in different browser simultaneously then they won't be able to access it. We will release a new feature/fix related to this soon. This new feature/fix will allow developers to customize the number of simultaneous terminal sessions allowed per user.
