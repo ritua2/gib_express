@@ -183,7 +183,7 @@ To restrict access such that only:
 if( request.getSession().getAttribute("is_cilogon").toString()=="true" || authentication.getPrincipal().toString().contains("ROLE_ADMIN"))
 return "compileRun_v5";
 ```
-and append followiing lines,
+and append following lines,
 
 ```bash
 else
