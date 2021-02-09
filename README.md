@@ -178,7 +178,7 @@ To restrict access such that only:
 
 1. LDAP and CILogon users can access this page, uncomment the code under compileRunStatus function inside UploadController.java as instructed on the second last line of the method (line #509).
 2. LDAP users can access the page, uncomment the code under compileRunStatus function inside UploadController.java as instructed on the second last line of the method (line #509) and remove " request.getSession().getAttribute("is_cilogon").toString()=="true" || " from the if-condition at line #499
-3. CIlogon users can access the page, then uncomment the following code on line #499 & line #500
+3. CILogon users can access the page, then uncomment the following code on line #499 & line #500
 ```bash
 if( request.getSession().getAttribute("is_cilogon").toString()=="true" || authentication.getPrincipal().toString().contains("ROLE_ADMIN"))
 return "compileRun_v5";
