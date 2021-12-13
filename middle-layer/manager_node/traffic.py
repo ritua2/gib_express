@@ -339,7 +339,6 @@ def assigner(user_id):
 @app.route("/api/redirect/users/<user_id>/<target_ip>", methods=['GET'])
 def redirect_to_wetty(user_id, target_ip):
 
-    target_ip = IP_to_hostname(target_ip)
     ipt_db = mysql_con.connect(host = URL_BASE , port = 6603, user = MYSQL_USER, password = MYSQL_PASSWORD, database = MYSQL_DATABASE)
     cursor = ipt_db.cursor(buffered=True)
     
@@ -355,6 +354,7 @@ def redirect_to_wetty(user_id, target_ip):
         ipt_db.commit()
         cursor.close()
         ipt_db.close()
+        target_ip = IP_to_hostname(target_ip)
         return "Redirecting https://"+target_ip+":"+port+"/wetty"
     else:
         cursor.close()
@@ -554,7 +554,7 @@ def free_instance():
 
     key = ppr["key"]
     reqhostname = IP_to_hostname(ppr["IP"])
-    reqip = ppr["IP"]
+    reqip = hostname_to_IP(ppr["IP"])
 
     port = str(ppr["Port"])
 
@@ -789,14 +789,15 @@ def container_wait():
     user_ip_port_container = ip+":"+port
     [ip_used, port_used] = user_ip_port_container.split(":")
 
-    ip_used = IP_to_hostname(ip_used)
+    ip_used = hostname_to_IP(ip_used)
+    host_used = IP_to_hostname(ip_used)
 
     wetty_key = PK_32(ip_used, port_used)
 
     miniserver_port = str(int(port_used) + 100)
 
     # Calls the miniserver
-    req = requests.post("http://"+ip_used+":"+miniserver_port+"/wait", data={"key": wetty_key, "username":username})
+    req = requests.post("http://"+host_used+":"+miniserver_port+"/wait", data={"key": wetty_key, "username":username})
     
     if req.text == "INVALID key":
         return "Could not set wetty terminal as WAIT"
