@@ -87,11 +87,22 @@
     
     <!--<Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"  maxThreads="150" SSLEnabled="true" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" keystoreFile="/usr/local/tomcat/keystore" keystorePass="Dr3C@rl05Kr1$" />-->
 	
-	<Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
+	<!-- <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS" 
 	       keystoreFile="/usr/local/tomcat/keystore"
-	       keystorePass="password" />
+	       keystorePass="password" /> -->
+     <Connector protocol="org.apache.coyote.http11.Http11AprProtocol"
+           port="8443"
+           maxThreads="100"
+           scheme="https"
+           secure="true"
+           SSLEnabled="true"
+           keystoreFile="/usr/local/tomcat/keystore"
+           keystorePass="<keystore_password>"
+           keyAlias="tomcat"
+           SSLProtocol="TLSv1.1+TLSv1.2"
+           clientAuth="false"/>
      <!--   <SSLHostConfig>
             <Certificate certificateKeystoreFile="../keystore" certificateKeystorePass="Dr3C@rl05Kr1$"
                          type="RSA" />
@@ -118,7 +129,7 @@
     -->
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
-    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+    <Connector port="8009" enableLookups="false" redirectPort="8443" tomcatAuthentication="false" maxThreads="400"  protocol="AJP/1.3" address="0.0.0.0" requiredSecret="<database_password>" />
 
 
     <!-- An Engine represents the entry point (within Catalina) that processes

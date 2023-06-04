@@ -81,11 +81,17 @@ chmod +x gib_setup.sh
 
 # While executing trhe script, it will propmpt for password. user can type "password" to match with default configuration and fill out other details
 # If user would like to set different password, then type it on the prompt and update "password" in below tag inside server.xml with "vi springipt/server.xml" command after script finishes execution
-<Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
-               maxThreads="150" scheme="https" secure="true"
-               clientAuth="false" sslProtocol="TLS" 
-	       keystoreFile="/usr/local/tomcat/keystore"
-	       keystorePass="password" />
+     <Connector protocol="org.apache.coyote.http11.Http11AprProtocol"
+           port="8443"
+           maxThreads="100"
+           scheme="https"
+           secure="true"
+           SSLEnabled="true"
+           keystoreFile="/usr/local/tomcat/keystore"
+           keystorePass="<keystore_password>"
+           keyAlias="tomcat"
+           SSLProtocol="TLSv1.1+TLSv1.2"
+           clientAuth="false"/>
 
 # Go to the springipt directory
 cd springipt
